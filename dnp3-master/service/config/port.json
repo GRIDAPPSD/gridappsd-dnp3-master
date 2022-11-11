@@ -1,0 +1,12 @@
+[
+   {
+      "port":"20000",
+      "link_local_addr":1,
+      "link_remote_addr":1024
+   },
+   {
+      "port":"20001",
+      "link_local_addr":2,
+      "link_remote_addr":1025
+   }
+]

@@ -1,0 +1,5 @@
+pydnp3==0.1.0
+PyYAML==5.1
+pytz==2016.6.1
+gridappsd-python
+pandas==1.2.2

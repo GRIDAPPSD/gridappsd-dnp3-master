@@ -1,0 +1,12 @@
+{
+    "RTU1": {
+    "name": "RTU1",
+    "conversion_type": "RTU1",
+    "CIM object": "214136440_1_3",
+    "port": "20000",
+    "ip": "10.79.91.44",
+    "desc": "RTU1",
+    "link_local_addr": "43",
+    "link_remote_addr": "1"
+  }
+}
