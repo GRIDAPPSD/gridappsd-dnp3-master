@@ -14,3 +14,17 @@ The start_service.py will start all the masters and collect the built CIM messag
 ```
  python3 start_service.py 'RTU1' 
 ```
+
+## Scripts
+
+The dnp3-master/service/scripts directory contains time saving python scripts that automate data transformation and config file creations.
+
+1. automation_mapping.py 
+
+It reads model_dict.json and generates converstion_dict_master.json and measurement_dict_master.json
+
+Input: dn3-master/scripts/files/model_dict.json 
+Output: dnp3-master/config/converstion_dict_master.json
+Output: dnp3-master/config/measurement_dict_master.json
+
+

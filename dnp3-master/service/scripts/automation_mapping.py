@@ -198,11 +198,11 @@ def get_device_dict(model_dict, model_line_dict, device_type, name):
                  #       print(reg)
 
 #--------------------------------------
-IEEE123_model='/home/gridapps-d/pydnp3_old/DNP3_NREL_Files/Master_GridAPPSD_files/1514974858_ieee123/model_dict.json'
+IEEE123_model='./files/model_dict.json'
 with open(IEEE123_model) as f:
      model_dict_feeder = json.load(f)
 #dict_path='/home/gridapps-d/pydnp3_old/DNP3_NREL_Files/Master_GridAPPSD_files/1514974858_ieee123/model_dict.json'
-csv_file=r'IEEE123_RTAC_AI_AO_Mod2.xlsx'
+csv_file=r'files/IEEE123_RTAC_AI_AO_Mod2.xlsx'
 sheet_name='RTU1'
 sheet_AO='RTU1_AO'
 sheet_BI='RTU1_BI'
@@ -289,10 +289,10 @@ for index, row in df3.iterrows():
 print(measurement_mRID_dict)
 
 #---------------creating JSON dict files
-with open("measurement_dict_master.json", "w") as f:
+with open("../config/measurement_dict_master.json", "w") as f:
         json.dump(measurement_mRID_dict, f, indent=2)
 
-with open("conversion_dict_master_data.json", "w") as f:
+with open("../config/conversion_dict_master_data.json", "w") as f:
         json.dump(master_dict, f, indent=2)
        
    

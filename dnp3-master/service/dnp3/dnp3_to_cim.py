@@ -37,27 +37,6 @@ def get_conversion_model(csv_file,sheet_name):
         master_dict[type_name] = temp_dict_set_key_to_index
     return master_dict
 
-def build_conversion(csv_file):
-    conversion_dict = {}
-    shark = get_conversion_model(csv_file, sheet_name='Shark')
-    conversion_dict['Shark'] = shark
-    shark = get_conversion_model(csv_file, sheet_name='Beckwith CapBank 2')
-    conversion_dict['Beckwith CapBank'] = shark
-    shark = get_conversion_model(csv_file, sheet_name='Beckwith LTC')
-    conversion_dict['Beckwith LTC'] = shark
-    with open("conversion_dict.json", "w") as f:
-        json.dump(conversion_dict, f, indent=2)
-
-# def build_conversion(DNP3_device_xlsx):
-#     df = pd.read_excel(r'DNP3 list.xlsx', sheet_name='Shark')
-#     conversion_dict = {}
-#     df = df.set_index('Index')
-#     shark_dict = df.T.to_dict()
-#     conversion_dict['Shark'] = shark_dict
-#     conversion_dict = {"Shark": shark_dict}
-#     with open("conversion_dict.json", "w") as f:
-#         json.dump(conversion_dict, f, indent=2)
-
 def get_device_dict(model_dict, model_line_dict, device_type, name):
     if device_type == 'Shark':
         for meas in model_dict['feeders'][0]['measurements']:
