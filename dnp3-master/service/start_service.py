@@ -38,12 +38,14 @@ import numpy as np
 import yaml
 import logging
 
-from CIMPro import CIMProcessor
+sys.path.append("../dnp3/service")
 
-from master import MyMaster, MyLogger, AppChannelListener, SOEHandler, SOEHandlerSimple, MasterApplication
-from dnp3_to_cim import CIMMapping
+from CIMPro_AIAO_BIBO import CIMProcessor
+
+from dnp3.master_pnnl import MyMaster, MyLogger, AppChannelListener, SOEHandler, SOEHandlerSimple, MasterApplication
+from dnp3.dnp3_to_cim import CIMMapping
 from pydnp3 import opendnp3, openpal
-from points import PointValue
+from dnp3.points import PointValue
 
 from gridappsd.topics import simulation_output_topic, simulation_input_topic
 from gridappsd import GridAPPSD, DifferenceBuilder, utils
@@ -96,9 +98,6 @@ def run_master(device_ip_port_config_all_13bus, names,simulation_id,gapps,dnp3_t
 
         masters.append(application_1)
 
-       
-        
-
     comID=gapps.subscribe('/topic/goss.gridappsd.field.input', on_message)
     print('Communication ID',comID)
     SLEEP_SECONDS = 1
@@ -115,7 +114,7 @@ def run_master(device_ip_port_config_all_13bus, names,simulation_id,gapps,dnp3_t
 
     msg_count=0
     csv_dict = {}
-    cim_full_msg = {'simulation_id': simulation_id, 'timestamp': str(int(time.time())), 'irradiance':0.0, 'message':{'measurements':{}}}
+    cim_full_msg = {'simulation_id': simulation_id, 'timestamp': str(int(time.time())), 'message':{'measurements':{}}}
     starttime = time.time()
     while True:
         pv_points = []
@@ -123,24 +122,46 @@ def run_master(device_ip_port_config_all_13bus, names,simulation_id,gapps,dnp3_t
         for master in masters:
             global myCIMProcessor
             if 'RTU1' in conversion_dict and 'Analog output' in conversion_dict['RTU1']:
+                
                 for k, v in conversion_dict['RTU1']['Analog output'].items():
+                    
                     if 'CIM mRID' in v:
-                        if '_6D6095A1-B8D2-4FCA-8CD0-F722B4821DDD' == v['CIM mRID'] and "PowerElectronicsConnection.p" == v['CIM attribute']:                     
-                            pv_point = PointValue(command_type=None, function_code=None, value=75, point_def=0, index=int(v['index']), op_type=None) # 2
-                        elif '_DD3BECE1-B157-4339-A940-46A3102DD036' == v['CIM mRID'] and "PowerElectronicsConnection.p" == v['CIM attribute']:
-                            pv_point = PointValue(command_type=None, function_code=None, value=444, point_def=0, index=int(v['index']), op_type=None) # 14
+                        
+                        if '_EF7C5ECB-D33A-4087-BEB6-F31D65141B0D' == v['CIM mRID'] and "EnergyConsumer.p" == v['CIM attribute']:                     
+                            
+                            pv_point = PointValue(command_type=None, function_code=None, value=10, point_def=0, index=int(v['index']), op_type=None) # 2
+                        elif '_84344D37-5FF6-41C7-B8BD-0C58C8A6127A' == v['CIM mRID'] and "EnergyConsumer.p" == v['CIM attribute']:
+                            pv_point = PointValue(command_type=None, function_code=None, value=15, point_def=0, index=int(v['index']), op_type=None) # 14
                         else :
-                            pv_point = PointValue(command_type=None, function_code=None, value=0, point_def=0, index=int(v['index']), op_type=None) 
-
+                            pv_point = PointValue(command_type=None, function_code=None, value=1500, point_def=0, index=int(v['index']), op_type=None) 
+           
                         pv_point.measurement_id = v['CIM mRID']
                         pv_point.attribute = v['CIM attribute']
-                        pv_points.append(pv_point)
+                        pv_points.append(pv_point)        
+            if 'RTU1' in conversion_dict and 'Binary output' in conversion_dict['RTU1']:
+                
+                for k, v in conversion_dict['RTU1']['Binary output'].items():
+                    #print('Hi I am at RTU1 stage-2',v)
+                    if 'CIM mRID' in v:
+                        #print('Hi I am at RTU1 stage-3')
+                        if '_7CBC54BB-4A93-410F-AF92-DDA633676AA0' == v['CIM mRID'] and "Switch.open" == v['CIM attribute']:                     
+                            #print('Hi I am at RTU1 stage-4')
+                            
+                            sw_point = PointValue(command_type=None, function_code=None, value=0, point_def=0, index=int(v['index']), op_type=None) # 2
+                        elif '_6C1FDA90-1F4E-4716-BC90-1CCB59A6D5A9' == v['CIM mRID'] and "Switch.open" == v['CIM attribute']:
+                            sw_point = PointValue(command_type=None, function_code=None, value=1, point_def=0, index=int(v['index']), op_type=None) # 14 
+
+                        sw_point.measurement_id = v['CIM mRID']
+                        sw_point.attribute = v['CIM attribute']
+                        pv_points.append(sw_point)
 
             myCIMProcessor = CIMProcessor(pv_points,application_1)
+            #myCIMProcessor = CIMProcessor(sw_points,application_1)
             cim_msg = master.soe_handler.get_msg()
             #print('cim_msg',cim_msg)
             #print('cim_msg arrived')
             dnp3_msg_AI = master.soe_handler.get_dnp3_msg_AI()
+            #print('Hi I am at RTU1 stage-1',dnp3_msg_AI)
             dnp3_msg_BI = master.soe_handler.get_dnp3_msg_BI()
             if master.name =='RTU1':
                 dnp3_msg_AO = myCIMProcessor.get_dnp3_msg_AO()
@@ -186,14 +207,13 @@ def run_master(device_ip_port_config_all_13bus, names,simulation_id,gapps,dnp3_t
 
             cim_full_msg['message']['measurements'].update(cim_msg)
             cim_full_msg['timestamp'] = str(int(time.time()))
-            
+            #print('')
             with open('meas_map.json', 'w') as outfile:
                  json.dump(cim_full_msg, outfile, indent=2)
-
+            print('AI CIM messages',cim_full_msg)
             ###############################     
             gapps.send('/topic/goss.gridappsd.field.output', json.dumps(cim_full_msg))
             master_data = DifferenceBuilder(simulation_id)
-            #print(pv_points)
             for point in pv_points:
                 if point.attribute == "PowerElectronicsConnection.p":
                    master_data.add_difference(point.measurement_id, point.attribute , point.value,point.value)
@@ -201,8 +221,15 @@ def run_master(device_ip_port_config_all_13bus, names,simulation_id,gapps,dnp3_t
                 elif point.attribute == "PowerElectronicsConnection.q":
                    master_data.add_difference(point.measurement_id, point.attribute , point.value,point.value)
                    master_open_message = master_data.get_message()
+                elif point.attribute == "EnergyConsumer.p":
+                   master_data.add_difference(point.measurement_id, point.attribute , point.value,point.value)
+                   master_open_message = master_data.get_message()
+                elif point.attribute == "Switch.open":
+                   master_data.add_difference(point.measurement_id, point.attribute , point.value,point.value)
+                   master_open_message = master_data.get_message()
+            
             json_msg = yaml.safe_load(str(master_open_message))  # direct sending of data
-            #print('Master send data to outstation')
+            #print('Master send data to outstation',json_msg)
             gapps.send('/topic/goss.gridappsd.field.input', json_msg)
         ########################################################
 
@@ -214,8 +241,8 @@ def run_master(device_ip_port_config_all_13bus, names,simulation_id,gapps,dnp3_t
 
         #print(master.name+" " +str(cim_full_msg)[:100])
         #_log.info(cim_full_msg)
-        # time.sleep(2)
-        time.sleep(60.0 - ((time.time() - starttime) % 60.0))
+        time.sleep(2)
+        #time.sleep(1.0 - ((time.time() - starttime) % 60.0))
 
 
     print('\nStopping')
@@ -241,8 +268,9 @@ if __name__ == "__main__":
     parser.add_argument("names",  nargs='+', help="name of dnp3 outstation", type=str)
     args = parser.parse_args()
     names = args.names
+
     
-    simulation_id='1234'   # Dummy simulation ID
+    simulation_id=1234   # Dummy simulation ID
     print('simulation ID created', simulation_id)
     gapps = GridAPPSD(username="system", password="manager")
     gapps.connect()
@@ -251,14 +279,14 @@ if __name__ == "__main__":
     with open("config/device_ip_port_config.json") as f:
         device_ip_port_config_all_Xcel = json.load(f)
  
+
     device_ip_port_dict = device_ip_port_config_all_Xcel[names[0]]
     print(device_ip_port_dict)
 
+
     data_loc='config'
-    dnp3_to_cim = CIMMapping(conversion_dict=os.path.join(data_loc,"conversion_dict_master.json"), model_line_dict=os.path.join(data_loc,"model_line_dict_master.json"))
+    dnp3_to_cim = CIMMapping(conversion_dict=os.path.join(data_loc,"conversion_dict_master_data.json"), model_line_dict=os.path.join(data_loc,"measurement_dict_master.json"))
     conversion_dict = dnp3_to_cim.conversion_dict
-    #with open( '/home/gridapps-d/pydnp3_old/gridappsd-dnp3-NREL_use_case_3/Use_case_6_Excel/conversion_dict_master.json') as f:
-      #       conversion_dict = json.load(f)
 
     time.sleep(1)
 

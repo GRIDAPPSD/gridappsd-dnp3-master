@@ -104,6 +104,23 @@ def get_device_dict(model_dict, model_line_dict, device_type, name):
                     if meas['measurementType'] not in model_line_dict[name]:  model_line_dict[name][meas['measurementType']] ={}
                     model_line_dict[name][meas['measurementType']][meas['phases']] = {'mrid':meas['mRID'],'type':'magnitude'}
                     model_line_dict[name][meas['measurementType']][meas['phases']] = {'mrid':meas['mRID'],'type':'angle'}
+            
+            if meas['name'].startswith('ACLineSegment_'+name):
+    #             print(meas)
+                if meas['phases'] =='C':
+                   if meas['measurementType'] == 'VA':
+                      if meas['measurementType'] not in model_line_dict[name]:  model_line_dict[name][meas['measurementType']] ={}
+                      model_line_dict[name][meas['measurementType']][meas['phases']] = {'mrid':meas['mRID'],'type':'magnitude'}
+                      model_line_dict[name][meas['measurementType']][meas['phases']] = {'mrid':meas['mRID'],'type':'angle'}
+
+            if meas['name'].startswith('LoadBreakSwitch_'+name):
+                #             print(meas)
+                if meas['measurementType'] == 'Pos':
+                    if meas['measurementType'] not in model_line_dict[name]:
+                        model_line_dict[name][meas['measurementType']] = {}
+                    model_line_dict[name][meas['measurementType']][meas['phases']] = {
+                        'mrid': meas['mRID'], 'type': 'pos'}
+                    
     elif device_type == 'Beckwith CapBank':
     #LinearShuntCompensator
         for meas in model_dict['feeders'][0]['measurements']:
