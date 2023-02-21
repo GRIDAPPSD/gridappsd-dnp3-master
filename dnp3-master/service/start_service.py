@@ -40,7 +40,7 @@ import logging
 
 sys.path.append("../dnp3/service")
 
-from scripts.CIMPro_AIAO_BIBO import CIMProcessor
+from dnp3.CIMPro_AIAO_BIBO import CIMProcessor
 
 from dnp3.master_pnnl import MyMaster, MyLogger, AppChannelListener, SOEHandler, SOEHandlerSimple, MasterApplication
 from dnp3.dnp3_to_cim import CIMMapping
