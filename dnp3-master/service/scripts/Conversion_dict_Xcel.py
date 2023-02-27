@@ -8,7 +8,7 @@ import csv
 
 
 
-with open('/home/gridapps-d/pydnp3_old/gridappsd-dnp3-NREL_use_case_3/Use_case_6_Excel/993911893/model_dict.json', 'r') as f:
+with open('/home/sing994/Master_GridAPPSD_Outstation_ADMS_files/DNP3_NREL_Files/Master_GridAPPSD_files/1514974858_ieee123/model_dict.json', 'r') as f:
      name_mrid= json.load(f)
 
 guess={}
@@ -96,7 +96,7 @@ def get_conversion_model(csv_file,sheet_name):
     return master_dict
 
 
-def convert_rtu(csv_file=r'UC6_RTAC_update.xlsx', sheet_name='RTU1',sheet_name1='RTU1_AO'):
+def convert_rtu(csv_file=r'IEEE123_Hypersim.xlsx', sheet_name='RTU1',sheet_name1='RTU1_AO'):
     skiprows = 0
     if sheet_name == 'RTU1':
         skiprows = 1
@@ -123,6 +123,16 @@ def convert_rtu(csv_file=r'UC6_RTAC_update.xlsx', sheet_name='RTU1',sheet_name1=
         if not temp_name.strip():
             print('empty')
             break
+            #EC_p__s74c EC_p__s102c
+        print(temp_name)
+        if temp_name=='42_Vrms':
+            temp_name='EC_p__s102c'
+        elif temp_name=='150_1_Vrms':
+            temp_name='EC_p__s74c'
+            
+        
+            
+        
         if 'LTC_' in temp_name:
             processed_name = temp_name + '_A'  # fake phase added I don't know what to do with this
         else:
@@ -184,6 +194,9 @@ def convert_rtu(csv_file=r'UC6_RTAC_update.xlsx', sheet_name='RTU1',sheet_name1=
         index_AO = temp_dict1['Index']
         temp_dict1['Index'] = index_AO
         temp_name1 = temp_dict1['Name']
+
+        if temp_name=='150_1_Vrms':
+            temp_name='EC_p__s74c'
             #print('temp_name1',temp_name1)
         processed_name_AO = temp_name1
         att='PowerElectronicsConnection'+'.'+processed_name_AO[3]
@@ -206,7 +219,7 @@ def convert_rtu(csv_file=r'UC6_RTAC_update.xlsx', sheet_name='RTU1',sheet_name1=
         processes_dict_AO['CIM units'] = 'VA'
         processes_dict_AO['CIM name'] = processed_name_AO[6:].lower()  # Hope this is good :)
 
-        with open('/home/gridapps-d/pydnp3_old/gridappsd-dnp3-NREL_use_case_3/Use_case_6_Excel/guess_mrid_1.json', 'r') as f:
+        with open('/home/sing994/Master_GridAPPSD_Outstation_ADMS_files/DNP3_NREL_Files/Master_GridAPPSD_files/guess_mrid_1.json', 'r') as f:
             guess_mrid= json.load(f)
 
         name=processed_name_AO[6:].lower()
@@ -316,8 +329,7 @@ def get_device_dict(model_dict, model_line_dict, device_type, name):
                         # Do I have to count for each position change?
                         print(reg)
 
-def build_RTAC(filename_rtu=r'UC6_RTAC_update.xlsx',
-               filename_eq='UC6_DNP3 list.xlsx',
+def build_RTAC(filename_rtu=r'IEEE123_Hypersim.xlsx',
                Xcel_model=''):
     conversion_dict_master = {}
     conversion_name_dict_master = {}
@@ -328,16 +340,12 @@ def build_RTAC(filename_rtu=r'UC6_RTAC_update.xlsx',
     #print('conversion_name_dict_master',conversion_name_dict_master)
 
 
-    ## individual equipment conversion parts, saves to file
-    build_eq_conversion_dict(filename_eq)
+ 
 
-    # Load EQ model
-    with open('conversion_dict_eq.json') as json_file:
-        data = json.load(json_file)
-
+    data={}
     data.update(conversion_dict_master)
 
-    with open("conversion_dict_master_1.json", "w") as f:
+    with open("conversion_dict_master.json", "w") as f:
         json.dump(data, f, indent=2)
     conversion_dict = data
 
@@ -363,31 +371,12 @@ def build_RTAC(filename_rtu=r'UC6_RTAC_update.xlsx',
         model_line_dict[name] = {}
         get_device_dict(model_dict, model_line_dict, device_type, name)
 
-    with open("model_line_dict_master_1.json", "w") as f:
+    with open("model_line_dict_master.json", "w") as f:
         json.dump(model_line_dict, f, indent=2)
 
 
-def build_eq_conversion_dict(csv_file = 'UC6_DNP3 list.xlsx'):
-    conversion_dict_eq = {}
-    # csv_file = 'DNP3 list.xlsx'
-    shark = get_conversion_model(csv_file, sheet_name='Shark')
-    conversion_dict_eq['Shark'] = shark
-    sheet_name = 'Beckwith CapBank 2'
-    beckwith_capbank = get_conversion_model(csv_file, sheet_name)
-    conversion_dict_eq['Beckwith CapBank'] = beckwith_capbank
-    sheet_name = 'Beckwith LTC'
-    beckwith_capbank = get_conversion_model(csv_file, sheet_name)
-    conversion_dict_eq[sheet_name] = beckwith_capbank
-    #######################################################################
-    sheet_name = 'RTU1'
-    beckwith_capbank = get_conversion_model(csv_file, sheet_name)
-    conversion_dict_eq[sheet_name] = beckwith_capbank
-    
-    with open("conversion_dict_eq_1.json", "w") as f:
-        json.dump(conversion_dict_eq, f, indent=2)
 
 
 if __name__ == '__main__':
-    build_RTAC(filename_rtu=r'UC6_RTAC_update.xlsx',
-               filename_eq='UC6_DNP3 list.xlsx',
-               Xcel_model = '/home/gridapps-d/pydnp3_old/gridappsd-dnp3-NREL_use_case_3/Use_case_6_Excel/993911893/model_dict.json')
+    build_RTAC(filename_rtu=r'IEEE123_Hypersim.xlsx',
+               Xcel_model = '/home/sing994/Master_GridAPPSD_Outstation_ADMS_files/DNP3_NREL_Files/Master_GridAPPSD_files/1514974858_ieee123/model_dict.json')

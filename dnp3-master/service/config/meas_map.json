@@ -1,8 +1,68 @@
 {
   "simulation_id": 1234,
-  "timestamp": "1660660988",
-  "irradiance": 0.0,
+  "timestamp": "1675462893",
   "message": {
-    "measurements": {}
+    "measurements": {
+      "_6b46d5f5-25d6-4a60-b6fe-c038608361d0": {
+        "mrid": "_6b46d5f5-25d6-4a60-b6fe-c038608361d0",
+        "magnitude": false,
+        "angle": 0
+      },
+      "_30644b38-52ce-4a61-a99e-040a0dbf4db8": {
+        "mrid": "_30644b38-52ce-4a61-a99e-040a0dbf4db8",
+        "magnitude": false,
+        "angle": 0
+      },
+      "_db26a1b1-ddc3-4513-8f3c-6b3ef736b6b6": {
+        "mrid": "_db26a1b1-ddc3-4513-8f3c-6b3ef736b6b6",
+        "magnitude": false,
+        "angle": 0
+      },
+      "_b150313b-343a-414e-b0c5-8331a992888d": {
+        "mrid": "_b150313b-343a-414e-b0c5-8331a992888d",
+        "magnitude": true,
+        "angle": 0
+      },
+      "_2172b274-8c4a-4344-b9aa-4debdabcd5f2": {
+        "mrid": "_2172b274-8c4a-4344-b9aa-4debdabcd5f2",
+        "magnitude": true,
+        "angle": 0
+      },
+      "_a791a98b-3e11-48ee-bbab-b592ba9e8e63": {
+        "mrid": "_a791a98b-3e11-48ee-bbab-b592ba9e8e63",
+        "magnitude": true,
+        "angle": 0
+      },
+      "_01687538-7a69-4d4f-b9af-43bc1da13ca1": {
+        "mrid": "_01687538-7a69-4d4f-b9af-43bc1da13ca1",
+        "magnitude": 10.0,
+        "angle": 0
+      },
+      "_0ecfb024-5c05-43b4-a7ad-09bd0459de8d": {
+        "mrid": "_0ecfb024-5c05-43b4-a7ad-09bd0459de8d",
+        "magnitude": 15.0,
+        "angle": 0
+      },
+      "_0f2275be-3038-4c76-bf7d-4100309cb710": {
+        "mrid": "_0f2275be-3038-4c76-bf7d-4100309cb710",
+        "magnitude": 124.36000061035156,
+        "angle": 0
+      },
+      "_0f5e989a-b0bd-4725-8ee0-80035f540e0a": {
+        "mrid": "_0f5e989a-b0bd-4725-8ee0-80035f540e0a",
+        "magnitude": 999.3300170898438,
+        "angle": 0
+      },
+      "_11afa788-4492-46cb-ab8d-1d7b5b713a49": {
+        "mrid": "_11afa788-4492-46cb-ab8d-1d7b5b713a49",
+        "magnitude": 1500.0,
+        "angle": 0
+      },
+      "_314ff96e-b21d-4fef-b86c-214144098d94": {
+        "mrid": "_314ff96e-b21d-4fef-b86c-214144098d94",
+        "magnitude": 1500.0,
+        "angle": 0
+      }
+    }
   }
 }
