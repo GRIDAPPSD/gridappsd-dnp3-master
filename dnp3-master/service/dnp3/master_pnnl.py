@@ -478,10 +478,7 @@ class SOEHandler(opendnp3.ISOEHandler):
                 for index, value in visitor.index_and_value:
 
                     if not self._dnp3_msg_AI_header:
-                        if self._device == 'Shark': 
-                            self._dnp3_msg_AI_header = [v['Type'] for k, v in conversion['Analog input'].items()]
-                        else:
-                            self._dnp3_msg_AI_header = [v['CIM name']+'_'+v['CIM units'] for k, v in conversion['Analog input'].items()]
+                        self._dnp3_msg_AI_header = [v['CIM name']+'_'+v['CIM units'] for k, v in conversion['Analog input'].items()]
                     
                     if self._name in self._device:
                         not_found = True
@@ -540,7 +537,6 @@ class SOEHandler(opendnp3.ISOEHandler):
                                 _log.debug("No conversion for " + str(index))
                                 #print('AO',value,counter2)
                 else:
-                    print('Colarado NREL')
                     for index, value in visitor.index_and_value:
                         self.update_cim_msg_binary(self.CIM_msg, str(float(index)), value, conversion, model) # Untested might work
             else:

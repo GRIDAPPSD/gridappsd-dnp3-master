@@ -42,7 +42,7 @@ import logging
 
 from dnp3.CIMPro_AIAO_BIBO import CIMProcessor
 
-from dnp3.master_pnnl import MyMaster, MyLogger, AppChannelListener, SOEHandler, SOEHandlerSimple, MasterApplication
+from dnp3.master_pnnl import MyMaster, MyLogger, AppChannelListener, SOEHandler, MasterApplication
 from dnp3.dnp3_to_cim import CIMMapping
 from pydnp3 import opendnp3, openpal
 from dnp3.points import PointValue
@@ -79,7 +79,6 @@ def run_master(device_ip_port_config_all_13bus, names,simulation_id,gapps,dnp3_t
                                 log_handler=MyLogger(),
                                 listener=AppChannelListener(),
                                 soe_handler=SOEHandler(object_name, convertion_type, dnp3_to_cim,gapps),
-                                # soe_handler=SOEHandlerSimple(),
                                 master_application=MasterApplication())
         application_1.name=name
         # application.channel.SetLogFilters(openpal.LogFilters(opendnp3.levels.ALL_COMMS))
@@ -118,7 +117,7 @@ def run_master(device_ip_port_config_all_13bus, names,simulation_id,gapps,dnp3_t
 
     msg_count=0
     csv_dict = {}
-    cim_full_msg = {'simulation_id': simulation_id, 'message':{'timestamp': int(time.time()),'measurements':{'test':'test'}}}
+    cim_full_msg = {'simulation_id': simulation_id, 'message':{'timestamp': int(time.time()),'measurements':{}}}
     
     while True:
         current_time = time.time()
