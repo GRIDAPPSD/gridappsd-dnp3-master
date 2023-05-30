@@ -56,14 +56,7 @@ FILTERS = opendnp3.levels.NOTHING
 # # LOCAL = "192.168.1.2"
 # PORT = 20000
 
-
-stdout_stream = logging.StreamHandler(sys.stdout)
-stdout_stream.setFormatter(logging.Formatter('%(asctime)s\t%(name)s\t%(levelname)s\t%(message)s'))
-
 _log = logging.getLogger(__name__)
-_log.addHandler(stdout_stream)
-_log.setLevel(logging.DEBUG)
-
 
 class MyMaster:
     """
@@ -475,29 +468,19 @@ class SOEHandler(opendnp3.ISOEHandler):
         model = model_line_dict[self._name]
         conversion = conversion_dict[self._device]
         
-        #print('devices',self._device)
-        if self._device == 'Shark':
-            conversion_name_index_dict = {v['Index']: v for k, v in conversion['Analog input'].items()}
-        else:
-            conversion_name_index_dict = {v['index']: v for k, v in conversion['Analog input'].items()}
+        conversion_name_index_dict = {v['index']: v for k, v in conversion['Analog input'].items()}
     
         
         #-------------------------------------------
         with self.lock:
-            #print('hi how are you',visitor.index_and_value)
             if type(values) == opendnp3.ICollectionIndexedAnalog:
                 
                 for index, value in visitor.index_and_value:
 
                     if not self._dnp3_msg_AI_header:
-                        # self._dnp3_msg_AI_header = {v['index']: v['CIM name'] for k, v in conversion['Analog input'].items()}
-                        if self._device == 'Shark': 
-                            self._dnp3_msg_AI_header = [v['Type'] for k, v in conversion['Analog input'].items()]
-                        else:
-                            self._dnp3_msg_AI_header = [v['CIM name']+'_'+v['CIM units'] for k, v in conversion['Analog input'].items()]
+                        self._dnp3_msg_AI_header = [v['CIM name']+'_'+v['CIM units'] for k, v in conversion['Analog input'].items()]
                     
-                    ######################################################################################################################
-                    if 'RTU' in self._device:
+                    if self._name in self._device:
                         not_found = True
                         self._dnp3_msg_AI[index]=value
                        
@@ -526,12 +509,10 @@ class SOEHandler(opendnp3.ISOEHandler):
                         if not_found:
                             print('AI',value)
                             _log.debug("No conversion for " + str(index))
-                    ######################################################################################################################
                     elif isinstance(value, numbers.Number) and str(float(index)) in conversion['Analog input']:
                         self._dnp3_msg_AI[index]=value
                         self.update_cim_msg_analog(self.CIM_msg, str(float(index)), value, conversion, model)
                     elif str(index) in conversion['Analog input']:
-                        #print('I am from USA')
                         self._dnp3_msg_AI[index]=value
                         self.update_cim_msg_analog(self.CIM_msg, str(index), value, conversion, model)
                     else:
@@ -556,7 +537,6 @@ class SOEHandler(opendnp3.ISOEHandler):
                                 _log.debug("No conversion for " + str(index))
                                 #print('AO',value,counter2)
                 else:
-                    print('Colarado NREL')
                     for index, value in visitor.index_and_value:
                         self.update_cim_msg_binary(self.CIM_msg, str(float(index)), value, conversion, model) # Untested might work
             else:

@@ -78,7 +78,7 @@ class CIMProcessor(object):
 
         if "input" in json_msg.keys():
             control_values = json_msg["input"]["message"]["forward_differences"]
-            _log.info("control_values ", control_values)
+            _log.info(f"control_values: {control_values}")
             with self.lock:
                 for command in control_values:
                     #------------------------- pv point definiations
@@ -87,7 +87,7 @@ class CIMProcessor(object):
                         if command.get("object") == point.measurement_id : # and point.value != command.get("value"):
 
                             if command.get("attribute") == point.attribute:
-                                _log.info("PV ",point.index, point.value, point.attribute)
+                                _log.info(f"PV {point.index}, {point.value}, {point.attribute}")
                                 if point.attribute=='Switch.open':
                                     #-------------- Binary output part
                                     if point.value ==1:
