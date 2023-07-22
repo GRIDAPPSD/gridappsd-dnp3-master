@@ -1,0 +1,303 @@
+{
+  "RTU1": {
+    "Analog input": {
+      "4": {
+        "orig_name": "100_Vrms_b_b",
+        "index": 4,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l98",
+        "CIM phase": "B"
+      },
+      "9": {
+        "orig_name": "101_Vrms_a_a",
+        "index": 9,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l101",
+        "CIM phase": "A"
+      },
+      "11": {
+        "orig_name": "101_Vrms_c_c",
+        "index": 11,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l100",
+        "CIM phase": "C"
+      },
+      "16": {
+        "orig_name": "105_Vrms_b_b",
+        "index": 16,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l101",
+        "CIM phase": "B"
+      },
+      "21": {
+        "orig_name": "13_Vrms_a_a",
+        "index": 21,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "sw2",
+        "CIM phase": "A"
+      },
+      "23": {
+        "orig_name": "13_Vrms_c_c",
+        "index": 23,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "sw2",
+        "CIM phase": "C"
+      },
+      "28": {
+        "orig_name": "149_Vrms_b_b",
+        "index": 28,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "sw1",
+        "CIM phase": "B"
+      },
+      "30": {
+        "orig_name": "150_Vrms_a_a",
+        "index": 30,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "reg1a",
+        "CIM phase": "A"
+      },
+      "32": {
+        "orig_name": "150_Vrms_c_c",
+        "index": 32,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "reg1a",
+        "CIM phase": "C"
+      },
+      "37": {
+        "orig_name": "160_Vrms_b_b",
+        "index": 37,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "sw4",
+        "CIM phase": "B"
+      },
+      "42": {
+        "orig_name": "18_Vrms_a_a",
+        "index": 42,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "sw3",
+        "CIM phase": "A"
+      },
+      "44": {
+        "orig_name": "18_Vrms_c_c",
+        "index": 44,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "sw3",
+        "CIM phase": "C"
+      },
+      "46": {
+        "orig_name": "25_Vrms_b_b",
+        "index": 46,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l24",
+        "CIM phase": "B"
+      },
+      "48": {
+        "orig_name": "300_Vrms_a_a",
+        "index": 48,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "sw7",
+        "CIM phase": "A"
+      },
+      "50": {
+        "orig_name": "300_Vrms_c_c",
+        "index": 50,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "sw7",
+        "CIM phase": "C"
+      },
+      "52": {
+        "orig_name": "35_Vrms_b_b",
+        "index": 52,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l114",
+        "CIM phase": "B"
+      },
+      "60": {
+        "orig_name": "42_Vrms_a_a",
+        "index": 60,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l41",
+        "CIM phase": "A"
+      },
+      "62": {
+        "orig_name": "42_Vrms_c_c",
+        "index": 62,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l41",
+        "CIM phase": "C"
+      },
+      "70": {
+        "orig_name": "50_Vrms_b_b",
+        "index": 70,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l49",
+        "CIM phase": "B"
+      },
+      "75": {
+        "orig_name": "51_Vrms_a_a",
+        "index": 75,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l50",
+        "CIM phase": "A"
+      },
+      "77": {
+        "orig_name": "51_Vrms_c_c",
+        "index": 77,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l50",
+        "CIM phase": "C"
+      },
+      "82": {
+        "orig_name": "54_Vrms_b_b",
+        "index": 82,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l53",
+        "CIM phase": "B"
+      },
+      "93": {
+        "orig_name": "76_Vrms_a_a",
+        "index": 93,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l73",
+        "CIM phase": "A"
+      },
+      "95": {
+        "orig_name": "76_Vrms_c_c",
+        "index": 95,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l73",
+        "CIM phase": "C"
+      },
+      "103": {
+        "orig_name": "80_Vrms_b_b",
+        "index": 103,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l80",
+        "CIM phase": "B"
+      },
+      "105": {
+        "orig_name": "8_Vrms_a_a",
+        "index": 105,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l10",
+        "CIM phase": "A"
+      },
+      "107": {
+        "orig_name": "8_Vrms_c_c",
+        "index": 107,
+        "Multiplier": 1,
+        "CIM attribute": "magnitude",
+        "CIM units": "PNV",
+        "CIM Variable": "V",
+        "CIM type": "PNV",
+        "CIM name": "l10",
+        "CIM phase": "C"
+      }
+    }
+  }
+}
