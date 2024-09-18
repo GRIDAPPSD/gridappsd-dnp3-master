@@ -311,7 +311,8 @@ class SOEHandler(opendnp3.ISOEHandler):
         self._dnp3_msg_BI_header = []
         self.lock = threading.Lock()
         self.gapps=gapps
-
+        print(dnp3_to_cim)
+        print(name)
         super(SOEHandler, self).__init__()
 
     def get_msg(self):
@@ -336,34 +337,34 @@ class SOEHandler(opendnp3.ISOEHandler):
         with self.lock:
             return self._dnp3_msg_BI_header
 
-    def update_cim_msg_analog_multi_index(self, CIM_msg, index, value, conversion, model):
-        # model_line_dict['irradiance']
-        if conversion[index]['CIM name'] == 'irradiance':
-            CIM_msg['irradiance'] = value
-            print('irradiance', value)
-            return
-        CIM_phase = conversion[index]['CIM phase']
-        CIM_units = conversion[index]['CIM units']
-        CIM_type = conversion[index]['CIM type']
-        
-        CIM_attribute = conversion[index]['CIM attribute']
-        ## Check if multiplier is na or str
-        multiplier = conversion[index]['Multiplier']
-        if CIM_type not in model:
-            print(str(CIM_units) + ' not in model')
-            return
+    #def update_cim_msg_analog_multi_index(self, CIM_msg, index, value, conversion, model):
+    #    # model_line_dict['irradiance']
+    #    if conversion[index]['CIM name'] == 'irradiance':
+    #        CIM_msg['irradiance'] = value
+    #        print('irradiance', value)
+    #        return
+    #    CIM_phase = conversion[index]['CIM phase']
+    #    CIM_units = conversion[index]['CIM units']
+    #    CIM_type = conversion[index]['CIM type']
+    #    
+    #    CIM_attribute = conversion[index]['CIM attribute']
+    #    ## Check if multiplier is na or str
+    #    multiplier = conversion[index]['Multiplier']
+    #    if CIM_type not in model:
+    #        print(str(CIM_units) + ' not in model')
+    #        return
 
-        if CIM_phase not in model[CIM_type]:
-            print(str(model) + ' phase not correct in model', CIM_phase, CIM_type)
-            return
-        mrid = model[CIM_type][CIM_phase]['mrid']
-        if type(multiplier) == str:
-            multiplier = 1
+    #    if CIM_phase not in model[CIM_type]:
+    #        print(str(model) + ' phase not correct in model', CIM_phase, CIM_type)
+    #        return
+    #    mrid = model[CIM_type][CIM_phase]['mrid']
+    #    if type(multiplier) == str:
+    #        multiplier = 1
 
-        CIM_value = {'mrid': mrid, 'angle': 0}
-        if mrid not in CIM_msg:
-            CIM_msg[mrid] = CIM_value
-        CIM_msg[mrid][CIM_attribute] = value * multiplier  # times multipier
+    #    CIM_value = {'mrid': mrid, 'angle': 0}
+    #    if mrid not in CIM_msg:
+    #        CIM_msg[mrid] = CIM_value
+    #    CIM_msg[mrid][CIM_attribute] = value * multiplier  # times multipier
 
 
     def update_cim_msg_analog(self, CIM_msg, index, value, conversion, model):
@@ -373,6 +374,8 @@ class SOEHandler(opendnp3.ISOEHandler):
             CIM_attribute = conversion['Analog input'][index]['CIM attribute']
             ## Check if multiplier is na or str
             multiplier = conversion['Analog input'][index]['Multiplier']
+            print(multiplier)
+            print("type", type(multiplier))
             if CIM_units not in model:
                 print(str(CIM_units) +' not in model')
                 return
@@ -380,8 +383,8 @@ class SOEHandler(opendnp3.ISOEHandler):
             if CIM_phase not in model[CIM_units]:
                 print(str(CIM_units) +' phase not correct in model')
                 return
-                
-            mrid = model[CIM_units][CIM_phase]['mrid']
+            print("model",model[CIM_units][CIM_phase][0]['mrid'])    
+            mrid = model[CIM_units][CIM_phase][0]['mrid']
             if type(multiplier) == str:
                 multiplier = 1
 
@@ -469,14 +472,13 @@ class SOEHandler(opendnp3.ISOEHandler):
         conversion = conversion_dict[self._device]
         
         conversion_name_index_dict = {v['index']: v for k, v in conversion['Analog input'].items()}
-    
         
         #-------------------------------------------
         with self.lock:
             if type(values) == opendnp3.ICollectionIndexedAnalog:
-                
+                print("Indices", visitor.index_and_value)    
                 for index, value in visitor.index_and_value:
-
+                    print(index, "...", value)
                     if not self._dnp3_msg_AI_header:
                         self._dnp3_msg_AI_header = [v['CIM name']+'_'+v['CIM units'] for k, v in conversion['Analog input'].items()]
                     
@@ -484,14 +486,13 @@ class SOEHandler(opendnp3.ISOEHandler):
                         not_found = True
                         self._dnp3_msg_AI[index]=value
                        
-                        for coin in list(conversion_name_index_dict.keys()):
-                            
+                        for coin in conversion_name_index_dict.keys():
                             if index == conversion_name_index_dict[coin]['index']:
                                 model = model_line_dict[conversion_name_index_dict[index]['CIM name']]
                                 CIM_phase = conversion_name_index_dict[index]['CIM phase']
                                 CIM_type = conversion_name_index_dict[index]['CIM type']
                                 CIM_Variable = conversion_name_index_dict[index]['CIM Variable']
-                                mrid = model[CIM_type][CIM_phase]['mrid']
+                                mrid = model[CIM_type][CIM_phase][0]['mrid']
                                 
                                 if index != 0:
                                     if CIM_Variable =='P':
@@ -504,8 +505,8 @@ class SOEHandler(opendnp3.ISOEHandler):
                                     if CIM_Variable =='P':
                                         magnitude = self._dnp3_msg_AI[index] 
                                         self.Get_CIM_Msg[mrid]={'mrid':mrid,'magnitude':magnitude,'angle':0}
-                                        #print('hi dnp3 AI',self.Get_CIM_Msg)
                                 not_found = False
+                        print(self.Get_CIM_Msg)
                         if not_found:
                             print('AI',value)
                             _log.debug("No conversion for " + str(index))
@@ -523,15 +524,25 @@ class SOEHandler(opendnp3.ISOEHandler):
                     for index, value in visitor.index_and_value:
                         self._dnp3_msg_BI[index]=value
                         conversion_name_index_dict = {v['index']: v for k, v in conversion['Binary input'].items()}
-                        #for counter2 in list(conversion_name_index_dict.keys()):
-                        #    print('Hi check BI',index,counter2)
-                        if index == conversion_name_index_dict[index]['index']:  
-                                model = model_line_dict[conversion_name_index_dict[index]['CIM name']]
-                                CIM_phase = conversion_name_index_dict[index]['CIM phase']
-                                CIM_type = conversion_name_index_dict[index]['CIM type']
-                                CIM_Variable = conversion_name_index_dict[index]['CIM Variable']
-                                mrid = model[CIM_type][CIM_phase]['mrid'] 
-                                self.Get_CIM_Msg[mrid]={'mrid':mrid,'magnitude':value,'angle':0} 
+                        
+                        if index in conversion_name_index_dict:	
+                            # _log.debug("Conversion for " + str(index))	
+                            model = model_line_dict[conversion_name_index_dict[index]['CIM name']]	
+                            # self.update_cim_msg_analog_multi_index(self._cim_msg,index,value,conversion_name_index_dict,model)	
+                            self.update_cim_msg_binary_rtu(self.CIM_msg, index, value, conversion_name_index_dict, model)
+                        
+                                                         
+                        
+#                        
+#                        #for counter2 in list(conversion_name_index_dict.keys()):
+#                        #    print('Hi check BI',index,counter2)
+#                        if index == conversion_name_index_dict[index]['index']:  
+#                                model = model_line_dict[conversion_name_index_dict[index]['CIM name']]
+#                                CIM_phase = conversion_name_index_dict[index]['CIM phase']
+#                                CIM_type = conversion_name_index_dict[index]['CIM type']
+#                                CIM_Variable = conversion_name_index_dict[index]['CIM Variable']
+#                                mrid = model[CIM_type][CIM_phase]['mrid'] 
+#                                self.Get_CIM_Msg[mrid]={'mrid':mrid,'magnitude':value,'angle':0} 
                                 
                         else:
                                 _log.debug("No conversion for " + str(index))
