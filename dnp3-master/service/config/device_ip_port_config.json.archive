@@ -8,5 +8,15 @@
     "desc": "RTU1",
     "link_local_addr": "2",
     "link_remote_addr": "1"
+  },
+  "RTU2": {
+    "name": "RTU2",
+    "conversion_type": "RTU2",
+    "CIM object": "l50",
+    "port": "40000",
+    "ip": "127.0.0.1",
+    "desc": "RTU2",
+    "link_local_addr": "2",
+    "link_remote_addr": "1"
   }
 }

@@ -1,0 +1,62 @@
+{
+    "RTU1": {
+      "Binary input": {
+        "0": {
+          "index": 0,
+          "original_name": "ufls_59.1",
+          "Type of Object": "Protection Relay",
+          "CIM attribute": "FunctionBlock.enabled",
+          "CIM name": "ufls_59.1",
+          "CIM phase": "ABC",
+          "CIM Variable": "Pos",
+          "CIM units": "",
+          "CIM type": "Pos",
+          "Multiplier": 1,
+          "CIM Var type": "magnitude"
+        },
+        "1": {
+          "index": 1,
+          "original_name": "ufls_59.5",
+          "Type of Object": "Protection Relay",
+          "CIM attribute": "FunctionBlock.enabled",
+          "CIM name": "ufls_59.5",
+          "CIM phase": "ABC",
+          "CIM Variable": "Pos",
+          "CIM units": "",
+          "CIM type": "Pos",
+          "Multiplier": 1,
+          "CIM Var type": "magnitude"
+        }
+    },
+    "Binary output": {
+      "0": {
+        "index": 0,
+        "original_name": "ufls_59.1",
+        "Type of Object": "Protection Relay",
+        "CIM attribute": "FunctionBlock.enabled",
+        "CIM name": "ufls_59.1",
+        "CIM phase": "ABC",
+        "CIM Variable": "pos",
+        "CIM units": "",
+        "CIM type": "Pos",
+        "Multiplier": 1,
+        "CIM Value Type": "magnitude",
+        "CIM mRID": "1d88371e-3db5-4b23-b8cd-fc0f2f3569fb"
+      },
+      "1": {
+        "index": 1,
+        "original_name": "ufls_59.5",
+        "Type of Object": "Protection Relay",
+        "CIM attribute": "FunctionBlock.enabled",
+        "CIM name": "ufls_59.5",
+        "CIM phase": "ABC",
+        "CIM Variable": "pos",
+        "CIM units": "",
+        "CIM type": "Pos",
+        "Multiplier": 1,
+        "CIM Value Type": "magnitude",
+        "CIM mRID": "a9eb2b35-c340-4d31-9a0a-4ff2d4463361"
+      }
+    }
+}
+}
