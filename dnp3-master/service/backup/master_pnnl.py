@@ -139,8 +139,8 @@ class MyMaster:
 
         # self.channel.SetLogFilters(openpal.LogFilters(opendnp3.levels.ALL_COMMS))
         # self.master.SetLogFilters(openpal.LogFilters(opendnp3.levels.ALL_COMMS))
-        self.channel.SetLogFilters(openpal.LogFilters(opendnp3.levels.NOTHING))
-        self.master.SetLogFilters(openpal.LogFilters(opendnp3.levels.NOTHING))
+        self.channel.SetLogFilters(openpal.LogFilters(opendnp3.levels.NORMAL))
+        self.master.SetLogFilters(openpal.LogFilters(opendnp3.levels.NORMAL))
 
 
         _log.debug('Enabling the master. At this point, traffic will start to flow between the Master and Outstations.')
@@ -371,35 +371,44 @@ class SOEHandler(opendnp3.ISOEHandler):
 
     def update_cim_msg_analog(self, CIM_msg, index, value, conversion, model):
         """Safe version of analog update to prevent KeyError crash"""
-        # Ensure index is the correct type for lookup (str or int)
-        analog_input = conversion.get('Analog input', {})
-        if index not in analog_input and str(index) in analog_input:
-            index = str(index)
+        idx_key = str(index)
         if 'Analog input' in conversion and index in conversion['Analog input']:
             conf = conversion['Analog input'][index]
             CIM_phase = conf.get('CIM phase')
             CIM_units = conf.get('CIM units')
             CIM_attribute = conf.get('CIM attribute')
             multiplier = conf.get('Multiplier', 1)
+
+            # Safety checks for model mapping
             if CIM_units not in model:
+                _log.debug("DEBUG: Unit '%s' not found in model for index %s", CIM_units, index)
                 return
+            
             if CIM_phase not in model[CIM_units]:
+                _log.debug("DEBUG: Phase '%s' not found in model['%s'] for index %s", CIM_phase, CIM_units, index)
                 return
+
             mrid = model[CIM_units][CIM_phase]['mrid']
+            
             if isinstance(multiplier, str):
                 multiplier = 1
+            
             CIM_value = {'mrid': mrid}
-            if CIM_units in ['PNV', 'V']:
+            if CIM_units in ['PNV', 'VA']:
                 CIM_value = {'mrid': mrid, 'magnitude': 0, 'angle': 0}
+            
             if mrid not in CIM_msg:
                 CIM_msg[mrid] = CIM_value
+            
             CIM_msg[mrid][CIM_attribute] = value * multiplier
-        # else:  # Optionally, log or handle missing index if needed
-        #     pass
-                
+            if mrid not in CIM_msg:
+                CIM_msg[mrid] = CIM_value
+            CIM_msg[mrid][CIM_attribute] = value * multiplier  # times multiplier
+    
     def update_cim_msg_binary_rtu(self, CIM_msg, index, value, conversion,model):
         #     print(conversion['Binary input'][index])
-        
+        _log.debug('binary jeff %s', conversion[index]['CIM phase'])
+
         CIM_phases = conversion[index]['CIM phase']
         CIM_units = conversion[index]['CIM units']
         CIM_attribute = conversion[index]['CIM attribute']
@@ -468,7 +477,7 @@ class SOEHandler(opendnp3.ISOEHandler):
         for index, value in visitor.index_and_value:
             # Check if it's a DNP3 object with a .value attribute, otherwise treat as float
             actual_val = value.value if hasattr(value, 'value') else value
-           
+            _log.debug('Index: %s | Value: %s', index, actual_val)
 # ----------------------------------
         conversion_dict = self._dnp3_to_cim.conversion_dict
         model_line_dict = self._dnp3_to_cim.model_line_dict
@@ -481,17 +490,50 @@ class SOEHandler(opendnp3.ISOEHandler):
         #-------------------------------------------
         with self.lock:
             if type(values) == opendnp3.ICollectionIndexedAnalog:
-                print("Indices", visitor.index_and_value)
+                _log.debug("Indices %s", visitor.index_and_value)
                 for index, value in visitor.index_and_value:
-                    # Check if it's a DNP3 object with a .value attribute, otherwise treat as float
-                    actual_val = value.value if hasattr(value, 'value') else value
-                    # Find CIMUnits for this index
-                    point_info = conversion_name_index_dict.get(index)
-                    if point_info and point_info.get('CIMUnits') == 'PNV':
-                        print(f"Voltage is {actual_val} (index {index}, mRID {point_info.get('mRID')})")
-                    # Update CIM_msg for analogs
-                    self.update_cim_msg_analog(self.CIM_msg, index, actual_val, conversion, model)
-                print("CIM_msg after processing analogs:", self.CIM_msg)
+                    _log.debug("%s ... %s", index, value)
+                    if not self._dnp3_msg_AI_header:
+                        self._dnp3_msg_AI_header = [v['CIM name']+'_'+v['CIM units'] for k, v in conversion['Analog input'].items()]
+                    
+                    if self._name in self._device:
+                        not_found = True
+                        self._dnp3_msg_AI[index]=value
+                       
+                        for coin in conversion_name_index_dict.keys():
+                            if index == conversion_name_index_dict[coin]['index']:
+                                model = model_line_dict[conversion_name_index_dict[index]['CIM name']]
+                                CIM_phase = conversion_name_index_dict[index]['CIM phase']
+                                CIM_type = conversion_name_index_dict[index]['CIM type']
+                                CIM_Variable = conversion_name_index_dict[index]['CIM Variable']
+                                mrid = model[CIM_type][CIM_phase][0]['mrid']
+
+                                if index != 0:
+                                    if CIM_Variable == 'P':
+                                        magnitude = self._dnp3_msg_AI[index]
+                                        self.CIM_msg[mrid] = {'mrid': mrid, 'magnitude': magnitude, 'angle': 0}
+                                        self.Get_CIM_Msg[mrid] = self.CIM_msg[mrid]
+                                    elif CIM_Variable == 'V':
+                                        magnitude = self._dnp3_msg_AI[index]
+                                        self.CIM_msg[mrid] = {'mrid': mrid, 'magnitude': magnitude, 'angle': 0}
+                                        self.Get_CIM_Msg[mrid] = self.CIM_msg[mrid]
+                                else:
+                                    if CIM_Variable == 'P':
+                                        magnitude = self._dnp3_msg_AI[index]
+                                        self.CIM_msg[mrid] = {'mrid': mrid, 'magnitude': magnitude, 'angle': 0}
+                                        self.Get_CIM_Msg[mrid] = self.CIM_msg[mrid]
+                                not_found = False
+                        _log.debug('CIM msg now %s', self.CIM_msg)
+                        if not_found:
+                            _log.debug('AI no conversion for %s', index)
+                    elif isinstance(value, numbers.Number) and str(float(index)) in conversion['Analog input']:
+                        self._dnp3_msg_AI[index]=value
+                        self.update_cim_msg_analog(self.CIM_msg, str(float(index)), value, conversion, model)
+                    elif str(index) in conversion['Analog input']:
+                        self._dnp3_msg_AI[index]=value
+                        self.update_cim_msg_analog(self.CIM_msg, str(index), value, conversion, model)
+                    else:
+                        _log.debug('No entry for index %s', index)
             elif type(values) == opendnp3.ICollectionIndexedBinary:
                 if 'RTU' in self._device and 'Binary input' in conversion:
                     

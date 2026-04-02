@@ -42,18 +42,6 @@ import logging
 
 from dnp3.CIMPro_AIAO_BIBO import CIMProcessor
 
-def get_voltage_mrids(json_path):
-    """Return all mRIDs for analog input points with CIMUnits == 'PNV' (voltage) from the config JSON."""
-    with open(json_path, 'r') as f:
-        data = json.load(f)
-    mrids = []
-    for outstation, points in data.items():
-        for idx, point in points.items():
-            if point.get("pointType") == "ANALOG_INPUT" and point.get("CIMUnits") == "PNV":
-                mrids.append(point.get("mRID"))
-    return mrids
-
-
 from dnp3.master_pnnl import MyMaster, MyLogger, AppChannelListener, SOEHandler, MasterApplication
 from dnp3.dnp3_to_cim import CIMMapping
 from pydnp3 import opendnp3, openpal
@@ -68,7 +56,6 @@ logging.basicConfig(level=logging.DEBUG)
 _log = logging.getLogger(__name__)
 
 def on_message(headers, message):
-    print(f"Received message: {message}")
     myCIMProcessor.process(message)
 
 
@@ -190,21 +177,6 @@ if __name__ == "__main__":
     #TODO: Change dummy simulation id to field id
     simulation_id='field_data'   
     gapps = GridAPPSD()
-
-    # Print all voltage (PNV) analog input mRIDs from the config file
-    config_json = os.path.join(config_path, 'conversion_dict_master_data.json')
-    try:
-        voltage_mrids = get_voltage_mrids(config_json)
-        print("\n==============================")
-        print(f"Voltage mRIDs (PNV, analog input) from {config_json}:")
-        if voltage_mrids:
-            for mrid in voltage_mrids:
-                print(f"  - {mrid}")
-        else:
-            print("  [None found]")
-        print("==============================\n")
-    except Exception as e:
-        print(f"[ERROR] Could not load or parse {config_json}: {e}")
     gapps.connect()
     
     with open(config_path+"/device_ip_port_config.json") as f:
