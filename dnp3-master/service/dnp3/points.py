@@ -439,16 +439,7 @@ class BasePointDefinition(object):
         self.magnitude = element_def.get('magnitude', None)
         self.value = element_def.get('value', None)
         self.attribute = element_def.get('attribute', None)
-        #Old, unused data
-        self.scaling_multiplier = element_def.get('scaling_multiplier', 1)
-        self.units = element_def.get('units', '')
-        self.event_class = element_def.get('event_class', 2)
-        self.event_group = element_def.get('event_group', None)
-        self.event_variation = element_def.get('event_variation', None)
-        self.selector_block_start = element_def.get('selector_block_start', None)
-        self.selector_block_end = element_def.get('selector_block_end', None)
-        self.save_on_write = element_def.get('save_on_write', None)
-        self.type = element_def.get('type', None)
+        # Removed unused/legacy attributes for clarity
 
     @property
     def is_array_point(self):

@@ -339,34 +339,7 @@ class SOEHandler(opendnp3.ISOEHandler):
         with self.lock:
             return self._dnp3_msg_BI_header
 
-    #def update_cim_msg_analog_multi_index(self, CIM_msg, index, value, conversion, model):
-    #    # model_line_dict['irradiance']
-    #    if conversion[index]['CIM name'] == 'irradiance':
-    #        CIM_msg['irradiance'] = value
-    #        print('irradiance', value)
-    #        return
-    #    CIM_phase = conversion[index]['CIM phase']
-    #    CIM_units = conversion[index]['CIM units']
-    #    CIM_type = conversion[index]['CIM type']
-    #    
-    #    CIM_attribute = conversion[index]['CIM attribute']
-    #    ## Check if multiplier is na or str
-    #    multiplier = conversion[index]['Multiplier']
-    #    if CIM_type not in model:
-    #        print(str(CIM_units) + ' not in model')
-    #        return
-
-    #    if CIM_phase not in model[CIM_type]:
-    #        print(str(model) + ' phase not correct in model', CIM_phase, CIM_type)
-    #        return
-    #    mrid = model[CIM_type][CIM_phase]['mrid']
-    #    if type(multiplier) == str:
-    #        multiplier = 1
-
-    #    CIM_value = {'mrid': mrid, 'angle': 0}
-    #    if mrid not in CIM_msg:
-    #        CIM_msg[mrid] = CIM_value
-    #    CIM_msg[mrid][CIM_attribute] = value * multiplier  # times multipier
+    # ...existing code...
 
 
     def update_cim_msg_analog(self, CIM_msg, index, value, conversion, model):
@@ -422,8 +395,7 @@ class SOEHandler(opendnp3.ISOEHandler):
             _log.debug('binary %s %s', value, int_value)
 
     def update_cim_msg_binary(self, CIM_msg, index, value, conversion,model):
-        #     print(conversion['Binary input'][index])
-        _log.debug('binary jeff model %s', model)
+        # ...existing code...
         if 'Binary input' in conversion and index in conversion['Binary input']:
             CIM_phases = conversion['Binary input'][index]['CIM phase']
             CIM_units = conversion['Binary input'][index]['CIM units']
@@ -434,8 +406,6 @@ class SOEHandler(opendnp3.ISOEHandler):
                 _log.debug('%s not in model', CIM_units)
                 return
             for CIM_phase in CIM_phases:
-                # print(model)
-                # exit(0)
                 mrid = model[CIM_units][CIM_phase]['mrid']
                 CIM_value = {'mrid': mrid}
                 if mrid not in CIM_msg:
@@ -487,11 +457,10 @@ class SOEHandler(opendnp3.ISOEHandler):
                     actual_val = value.value if hasattr(value, 'value') else value
                     # Find CIMUnits for this index
                     point_info = conversion_name_index_dict.get(index)
-                    if point_info and point_info.get('CIMUnits') == 'PNV':
-                        print(f"Voltage is {actual_val} (index {index}, mRID {point_info.get('mRID')})")
+                    # ...existing code...
                     # Update CIM_msg for analogs
                     self.update_cim_msg_analog(self.CIM_msg, index, actual_val, conversion, model)
-                print("CIM_msg after processing analogs:", self.CIM_msg)
+                # ...existing code...
             elif type(values) == opendnp3.ICollectionIndexedBinary:
                 if 'RTU' in self._device and 'Binary input' in conversion:
                     
@@ -502,7 +471,7 @@ class SOEHandler(opendnp3.ISOEHandler):
                         if index in conversion_name_index_dict:	
                             # _log.debug("Conversion for " + str(index))	
                             model = model_line_dict[conversion_name_index_dict[index]['CIM name']]	
-                            # self.update_cim_msg_analog_multi_index(self._cim_msg,index,value,conversion_name_index_dict,model)	
+                            # ...existing code...
                             self.update_cim_msg_binary_rtu(self.CIM_msg, index, value, conversion_name_index_dict, model)
                         
                                                          
@@ -520,7 +489,7 @@ class SOEHandler(opendnp3.ISOEHandler):
                                 
                         else:
                                 _log.debug("No conversion for " + str(index))
-                                #print('AO',value,counter2)
+                                # ...existing code...
                 else:
                     for index, value in visitor.index_and_value:
                         self.update_cim_msg_binary(self.CIM_msg, str(float(index)), value, conversion, model) # Untested might work
