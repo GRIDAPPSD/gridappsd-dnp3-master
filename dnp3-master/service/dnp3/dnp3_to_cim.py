@@ -5,7 +5,7 @@ import numpy as np
 class CIMMapping():
     """ This creates dnp3 input and output points for incoming CIM messages  and model dictionary file respectively."""
 
-    def __init__(self, conversion_dict="conversion_dict.json", model_line_dict="model_line_dict.json"):
+    def __init__(self, conversion_dict="conversion_dict_master_data.json", model_line_dict="measurement_dict_master.json"):
         with open(conversion_dict) as f:
             conversion_dict = json.load(f)
         self.conversion_dict = conversion_dict

@@ -9,6 +9,8 @@ import os
 from pathlib import Path
 from collections import defaultdict
 
+from importlib_metadata import files
+
 def main():
     # Get script directory for relative paths
     script_dir = Path(__file__).parent
@@ -16,8 +18,8 @@ def main():
     config_dir = script_dir.parent / "config"
 
     # Input files
-    csv_file = files_dir / "DNP3_Hypersim_Mapping.csv"
-    model_file = files_dir / "model_dict.json"
+    csv_file = files_dir / "DNP3_Hypersim_Mapping_updated.csv"
+    model_file = files_dir / "model_dict_new.json"
 
     # Output files
     measurement_output = config_dir / "measurement_dict_master.json"
